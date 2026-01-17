@@ -1,0 +1,59 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "env": {
+    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
+    "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
+    "CLAUDE_CODE_HIDE_ACCOUNT_INFO": 1,
+    "DISABLE_AUTOUPDATER": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "DISABLE_TELEMETRY": "1",
+    "IS_DEMO": "1",
+    "PIP_CACHE_DIR": ".cache/pip",
+    "XDG_CACHE_HOME": ".cache",
+    "npm_config_cache": ".cache/npm"
+  },
+  "model": "haiku",
+  "permissions": {
+    "allow": [
+      "Bash(docker:*)",
+      "Bash(npm:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(sort:*)",
+      "Bash(wc:*)"
+    ],
+    "ask": [],
+    "defaultMode": "default",
+    "deny": [
+      "Bash(git config:*)",
+      "Bash(git push:*)",
+      "Bash(sudo:*)",
+      "Edit(./.claude/settings.json)",
+      "Edit(**/.gitconfig)",
+      "Read(./.azure/**)",
+      "Read(./.env)",
+      "Read(./.terraform/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.azure/**)",
+      "Read(~/.config/gcloud/**)",
+      "Read(~/.gitconfig)",
+      "Read(~/.ssh/**)",
+      "Read(~/.terraform.d/**)",
+      "Write(./.claude/settings.json)",
+      "Write(**/.gitconfig)"
+    ]
+  },
+  "sandbox": {
+    "allowUnsandboxedCommands": false,
+    "autoAllowBashIfSandboxed": true,
+    "enabled": true,
+    "network": {
+      "allowLocalBinding": true
+    }
+  }
+}

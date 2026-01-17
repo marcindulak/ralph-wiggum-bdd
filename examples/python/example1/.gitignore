@@ -1,0 +1,6 @@
+*~
+.DS_Store
+old
+*.py[c,d,o]
+.cache
+ELN.md
