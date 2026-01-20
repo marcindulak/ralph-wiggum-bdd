@@ -213,14 +213,15 @@ The script will start a new iteration when the user returns.
 
 usage() {
     echo ""
-    echo "Usage: $0 --iterations N [--force]        # Non-interactive mode"
-    echo "       $0 --interactive [--force]         # Interactive mode"
+    echo "Usage: $0 --iterations N [--force] # Non-interactive mode"
+    echo "       $0 --interactive [--force]  # Interactive mode"
     echo ""
     echo "Options:"
-    echo "  --iterations N        Maximum number of agent iterations (non-interactive mode)"
-    echo "  --interactive         Use interactive Claude mode (human controls when to stop)"
-    echo "  --force               Run even when all features are @status-done (for consistency checks)"
-    echo "  --help                Show this help message"
+    echo "  --force        Run even when all features are @status-done (for consistency checks)"
+    echo "  --help         Show this help message"
+    echo "  --interactive  Use interactive Claude mode (human controls when to stop)"
+    echo "  --iterations N Maximum number of agent iterations (non-interactive mode)"
+    echo "  --prompt       Custom prompt string, e.g., \"You're absolutely right!\", or \"\$(cat prompt.md)\""
     exit 1
 }
 
@@ -230,6 +231,17 @@ FORCE_MODE=false
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
+        --force)
+            FORCE_MODE=true
+            shift
+            ;;
+        --help)
+            usage
+            ;;
+        --interactive)
+            INTERACTIVE_MODE=true
+            shift
+            ;;
         --iterations)
             if [[ -z "$2" ]] || ! [[ "$2" =~ ^[0-9]+$ ]]; then
                 echo "Error: --iterations requires a positive integer"
@@ -238,17 +250,14 @@ while [[ $# -gt 0 ]]; do
             MAX_ITERATIONS="$2"
             shift 2
             ;;
-        --interactive)
-            INTERACTIVE_MODE=true
-            shift
-            ;;
-        --force)
-            FORCE_MODE=true
-            shift
-            ;;
-        --help)
-            usage
-            ;;
+        --prompt)
+            if [[ -z "$2" ]]; then
+                echo "Error: --prompt requires a string" >&2
+                exit 1
+            fi
+            PROMPT="$2"
+            shift 2
+            ;;        
         *)
             echo "Error: Unknown option: $1"
             usage
