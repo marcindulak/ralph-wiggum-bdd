@@ -276,11 +276,6 @@ if [[ "${INTERACTIVE_MODE}" == "false" ]] && [[ -z "${MAX_ITERATIONS}" ]]; then
     usage
 fi
 
-if [[ ! -f "REQUIREMENTS.md" ]]; then
-    echo "Error: REQUIREMENTS.md not found in current directory"
-    exit 1
-fi
-
 if [[ "${INTERACTIVE_MODE}" == "true" ]]; then
     MAX_ITERATIONS=1
     PROMPT_FILE="/tmp/ralph-wiggum-bdd-prompt-$$.txt"
