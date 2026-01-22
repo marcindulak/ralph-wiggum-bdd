@@ -17,27 +17,9 @@ The script may improve generated code quality compared to a standalone agent bec
 
 It may fail to generate the desired code because, among others:
 
-- Requirements are incomplete or ambiguous.
+- Requirements are incomplete, ambiguous, or contradictory.
 - The agent does not reliably follow instructions ([anthropics/claude-code/issues/13689](https://github.com/anthropics/claude-code/issues/13689)); for example, it may silently skip tests when unable to run them, or decide to implement multiple features in one iteration.
-- The agent does not terminate the iteration and enters a whack-a-mole pattern, switching between non-working solutions, requesting human guidance, or continuing despite task completion.
-
-## Differences wrt [Ralph Wiggum](https://ghuntley.com/ralph/):
-
-- Behavior-Driven Development (BDD) features written in [Gherkin](https://cucumber.io/docs/gherkin/) are used for progress tracking, instead of custom Markdown or JSON formats.
-
-- Both non-interactive (default) and interactive modes are supported.
-  The interactive mode is needed because coding agents are fallible.
-
-- Aims at bidirectional sync of requirements<->code (similar to [kiro](https://kiro.dev/)).
-  The sync from code towards requirements requires human interaction.
-
-- Single prompt that handles all phases: requirements->features, and features->code.
-  Separation into multiple phases and prompts would complicate the sync feature.
-
-- Agent stores its observations and learnings in `ELN.md`, an append-only [Electronic_lab_notebook](https://en.wikipedia.org/wiki/Electronic_lab_notebook) file.
-  This file is intended for human use only and should never be used by the agent to make decisions.
-
-For a detailed discussions about the Ralph loop approach see the video [ai that works: Ralph Wiggum under the hood: Coding Agent Power Tools](https://github.com/ai-that-works/ai-that-works/tree/main/2025-10-28-ralph-wiggum-coding-agent-power-tools).
+- The agent does not terminate the iteration and enters a whack-a-mole pattern, switches between non-working solutions, requests human guidance, or continues despite task completion.
 
 # Usage examples
 
@@ -58,7 +40,7 @@ export PATH="${PATH}:$(pwd)/scripts"
 
 The [scripts/ralph-wiggum-bdd.sh](scripts/ralph-wiggum-bdd.sh) script is standalone.
 Instead of exporting PATH, you can copy the script into your project, or under a global path (e.g., `/usr/local/bin`).
-You can also copy and commit the script into your project repo that uses it.
+You can also commit the script into your project repo that uses it.
 
 ## Example project
 
@@ -122,6 +104,24 @@ For a usage on a larger code base, see [Learning API Styles Book - Generative AI
 1. **scripts/ralph-wiggum-bdd.sh**: Bash script that loops N times, invoking the agent CLI each iteration. The prompt is embedded in the script.
 
 2. **Feature files with status tags**: Tags (`@status-todo`, `@status-active`, `@status-done`) in `.feature` files track progress.
+
+## Differences wrt [Ralph Wiggum](https://ghuntley.com/ralph/):
+
+- Behavior-Driven Development (BDD) features written in [Gherkin](https://cucumber.io/docs/gherkin/) are used for progress tracking, instead of custom Markdown or JSON formats.
+
+- Both non-interactive (default) and interactive modes are supported.
+  The interactive mode is needed because coding agents are fallible.
+
+- Aims at bidirectional sync of requirements<->code (similar to [kiro](https://kiro.dev/)).
+  The sync from code towards requirements requires human interaction.
+
+- Single prompt that handles all phases: requirements->features, and features->code.
+  Separation into multiple phases and prompts would complicate the sync feature.
+
+- Agent stores its observations and learnings in `ELN.md`, an append-only [Electronic_lab_notebook](https://en.wikipedia.org/wiki/Electronic_lab_notebook) file.
+  This file is intended for human use only and should never be used by the agent to make decisions.
+
+For a detailed discussions about the Ralph loop approach see the video [ai that works: Ralph Wiggum under the hood: Coding Agent Power Tools](https://github.com/ai-that-works/ai-that-works/tree/main/2025-10-28-ralph-wiggum-coding-agent-power-tools).
 
 # Running tests
 
