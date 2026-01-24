@@ -64,13 +64,12 @@ timeout 600 ralph-wiggum-bdd.sh --iterations 5
 To try it in interactive mode (recommended - human supervises each action):
 
 ```
-ralph-wiggum-bdd.sh --interactive --force
+ralph-wiggum-bdd.sh --interactive
 ```
 
 In the interactive mode, the prompt will be saved to a temp file.
 In Claude, reference it with `@/tmp/ralph-wiggum-bdd-prompt-PID.txt` or provide your own instructions.
 The human controls when to stop by exiting the Claude session.
-The `--force` flag makes the agent run even if all features are marked with `@status-done`.
 
 For a usage on a larger code base, see [Learning API Styles Book - Generative AI Experiments](https://github.com/marcindulak/learning-api-styles-gen-ai-experiments).
 
