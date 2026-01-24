@@ -213,11 +213,10 @@ The script will start a new iteration when the user returns.
 
 usage() {
     echo ""
-    echo "Usage: $0 --iterations N [--force] # Non-interactive mode"
-    echo "       $0 --interactive [--force]  # Interactive mode"
+    echo "Usage: $0 --iterations N # Non-interactive mode"
+    echo "       $0 --interactive  # Interactive mode"
     echo ""
     echo "Options:"
-    echo "  --force        Run even when all features are @status-done (for consistency checks)"
     echo "  --help         Show this help message"
     echo "  --interactive  Use interactive Claude mode (human controls when to stop)"
     echo "  --iterations N Maximum number of agent iterations (non-interactive mode)"
@@ -227,14 +226,9 @@ usage() {
 
 MAX_ITERATIONS=""
 INTERACTIVE_MODE=false
-FORCE_MODE=false
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --force)
-            FORCE_MODE=true
-            shift
-            ;;
         --help)
             usage
             ;;
@@ -282,24 +276,6 @@ if [[ "${INTERACTIVE_MODE}" == "true" ]]; then
     trap '/bin/rm -f "${PROMPT_FILE}"' EXIT INT TERM
 fi
 
-all_features_done() {
-    if [[ ! -d "features" ]]; then
-        return 1
-    fi
-
-    local feature_count
-    feature_count=$(find features -maxdepth 1 -name "*.feature" 2>/dev/null | wc -l)
-    if [[ "${feature_count}" -eq 0 ]]; then
-        return 1
-    fi
-
-    if grep -l -E '@status-todo|@status-active' features/*.feature >/dev/null 2>&1; then
-        return 1
-    fi
-
-    return 0
-}
-
 echo "ralph-wiggum-bdd: Starting with max ${MAX_ITERATIONS} iterations"
 echo "----------------------------------------"
 
@@ -307,12 +283,6 @@ for ((i = 1; i <= MAX_ITERATIONS; i++)); do
     echo ""
     echo "Iteration ${i}/${MAX_ITERATIONS}"
     echo "----------------------------------------"
-
-    if all_features_done && [[ "${FORCE_MODE}" != "true" ]]; then
-        echo "All features are @status-done. Loop complete."
-        echo "Use --force to run consistency checks anyway."
-        exit 0
-    fi
 
     echo "DEBUG: About to invoke claude..." >&2
     echo "DEBUG: PROMPT length: ${#PROMPT} characters" >&2
@@ -331,13 +301,3 @@ for ((i = 1; i <= MAX_ITERATIONS; i++)); do
     echo ""
     echo "--- End of iteration ${i} ---"
 done
-
-if all_features_done; then
-    echo ""
-    echo "All features are @status-done. Loop complete."
-    exit 0
-else
-    echo ""
-    echo "Reached max iterations (${MAX_ITERATIONS}). Some features may still be incomplete."
-    exit 1
-fi
