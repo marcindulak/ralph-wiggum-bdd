@@ -276,6 +276,11 @@ if [[ "${INTERACTIVE_MODE}" == "true" ]]; then
     trap '/bin/rm -f "${PROMPT_FILE}"' EXIT INT TERM
 fi
 
+round10() {
+    local n=$1
+    echo $(( (n + 5) / 10 * 10 ))
+}
+
 echo "ralph-wiggum-bdd: Starting with max ${MAX_ITERATIONS} iterations"
 echo "----------------------------------------"
 
@@ -285,7 +290,9 @@ for ((i = 1; i <= MAX_ITERATIONS; i++)); do
     echo "----------------------------------------"
 
     echo "DEBUG: About to invoke claude..." >&2
-    echo "DEBUG: PROMPT length: ${#PROMPT} characters" >&2
+    echo -n "DEBUG: Approximate PROMPT length: $(round10 ${#PROMPT}) characters" >&2
+    echo -n ", $(round10 $(set -- $PROMPT && echo $#)) words" >&2
+    echo ", $(round10 $(( ($(set -- $PROMPT && echo $#)*3)/2 ))) tokens" >&2
     echo "DEBUG: Interactive mode: ${INTERACTIVE_MODE}" >&2
 
     if [[ "${INTERACTIVE_MODE}" == "true" ]]; then
