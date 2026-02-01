@@ -36,7 +36,7 @@ You must ALWAYS use ELN.md as input to decision-making at any point.
 
 ## Stage 1: Generate Features (if features/ does not exist)
 
-1. Analyze REQUIREMENTS.md and identify discrete testable requirements.
+1. Analyze REQUIREMENTS.md and identify discrete testable requirements (both functional and non-functional ones).
 2. Create features/ directory.
 3. For each requirement group, create a numbered feature file (001.feature, 002.feature, etc.).
 4. Each feature file must have:
