@@ -24,10 +24,10 @@ Always read and follow CLAUDE.md.
 
 ## CRITICAL: ELN.md Read/Write Rules
 
-NEVER READ ELN.md AT THE START OF THIS SESSION. Do not examine it, reference it, or use it in any way to make decisions.
-ELN.md is an append-only Electronic Lab Notebook for human review only.
+ALWAYS READ ELN.md AT THE START OF THIS SESSION.
+ELN.md is an append-only Electronic Lab Notebook.
 You may ONLY write to ELN.md after successfully committing code.
-You must NEVER use ELN.md as input to decision-making at any point.
+You must ALWAYS use ELN.md as input to decision-making at any point.
 
 ## Discovery
 
@@ -64,7 +64,7 @@ If issues found, stop and ask human to clarify or update features and/or REQUIRE
    Caveats:
    None
 
-6. After committing, append an entry to ELN.md with observations and learnings. Use the same format as Stage 2 (see Complete section).
+6. After committing, append an entry to ELN.md with observations and learnings. Include also negative learnings, like details of failed experiments. Use the same format as Stage 2 (see Complete section).
 
 7. MANDATORY STOP: Exit immediately after creating feature files. Do NOT proceed to Stage 2. Do NOT implement any code. The next iteration will handle implementation.
 
@@ -137,7 +137,7 @@ Do not mark @status-done unless the tests verify all scenarios pass.
 1. ONLY after the test suite runs and ALL scenarios pass: change the @status-active feature tag to @status-done.
    If other features now pass as a result of your changes, mark those as @status-done too.
 
-2. Commit all related files together (feature, steps, src) using EXACTLY this format:
+2. Commit all related file changes together (REQUIREMENTS.md, feature, steps, src, ...) using EXACTLY this format:
 
    Implement Feature NNN: Brief Title
 
@@ -180,8 +180,8 @@ Do not mark @status-done unless the tests verify all scenarios pass.
    # End of ENTRY 001
    ```
 
-   If ELN.md does not exist, create it with a header explaining it is an append-only log for human review only.
-   IMPORTANT: ELN.md is NOT committed - it remains a local non-committed file for human review.
+   If ELN.md does not exist, create it with a header explaining it is an append-only log.
+   IMPORTANT: ELN.md is NOT committed - it remains a local non-committed file.
 
 4. STOP HERE. Do NOT proceed to the next feature.
    Tell the user: "Feature NNN is complete and committed. Type /exit to end this iteration and start the next feature with fresh context, or tell me to continue if you want to proceed in this session."
@@ -203,7 +203,7 @@ The script will start a new iteration when the user returns.
 
 - One feature per iteration. STOP after completing or when blocked. Do NOT continue to next feature.
 - All scenarios and tests must pass before any commit. This is non-negotiable. Run the test suite and verify.
-- After ANY commit, you MUST append an entry to ELN.md. No exceptions.
+- After ANY commit (even one requested explicitly by the user), you MUST append an entry to ELN.md. No exceptions.
 - Never modify REQUIREMENTS.md without human approval.
 - Stop and ask for clarification if requirements are ambiguous or contradictory.
 - After committing a feature, STOP and tell user to type /exit for fresh context.
@@ -213,19 +213,20 @@ The script will start a new iteration when the user returns.
 
 usage() {
     echo ""
-    echo "Usage: $0 --iterations N # Non-interactive mode"
-    echo "       $0 --interactive  # Interactive mode"
+    echo "Usage: $0 <options>"
     echo ""
     echo "Options:"
-    echo "  --help         Show this help message"
-    echo "  --interactive  Use interactive Claude mode (human controls when to stop)"
-    echo "  --iterations N Maximum number of agent iterations (non-interactive mode)"
-    echo "  --prompt       Custom prompt string, e.g., \"You're absolutely right!\", or \"\$(cat prompt.md)\""
+    echo "  --help             Show this help message"
+    echo "  --interactive      Use interactive Claude mode (human controls when to stop)"
+    echo "  --iterations N     Maximum number of agent iterations (non-interactive mode)"
+    echo "  --no-local-context Do not use the local electronic notebook file (ELN.md) in the agent context"
+    echo "  --prompt           Custom prompt string, e.g., \"You're absolutely right!\", or \"\$(cat prompt.md)\""
     exit 1
 }
 
 MAX_ITERATIONS=""
 INTERACTIVE_MODE=false
+LOCAL_CONTEXT=true
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -243,6 +244,10 @@ while [[ $# -gt 0 ]]; do
             fi
             MAX_ITERATIONS="$2"
             shift 2
+            ;;
+        --no-local-context)
+            LOCAL_CONTEXT=false
+            shift
             ;;
         --prompt)
             if [[ -z "$2" ]]; then
@@ -274,6 +279,11 @@ if [[ "${INTERACTIVE_MODE}" == "true" ]]; then
     MAX_ITERATIONS=1
     PROMPT_FILE="/tmp/ralph-wiggum-bdd-prompt-$$.txt"
     trap '/bin/rm -f "${PROMPT_FILE}"' EXIT INT TERM
+fi
+
+if [[ "${LOCAL_CONTEXT}" == "false" ]]; then
+    PROMPT="${PROMPT//ALWAYS READ ELN.md AT THE START/NEVER READ ELN.md AT THE START}"
+    PROMPT="${PROMPT//You must ALWAYS use ELN.md as input to decision-making/You must NEVER use ELN.md as input to decision-making}"
 fi
 
 round10() {

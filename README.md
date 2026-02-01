@@ -104,7 +104,7 @@ For a usage on a larger code base, see [Learning API Styles Book - Generative AI
 
 2. **Feature files with status tags**: Tags (`@status-todo`, `@status-active`, `@status-done`) in `.feature` files track progress.
 
-## Differences wrt [Ralph Wiggum](https://ghuntley.com/ralph/):
+## Differences wrt the original [Ralph Wiggum](https://ghuntley.com/ralph/) approach:
 
 - Behavior-Driven Development (BDD) features written in [Gherkin](https://cucumber.io/docs/gherkin/) are used for progress tracking, instead of custom Markdown or JSON formats.
 
@@ -118,7 +118,11 @@ For a usage on a larger code base, see [Learning API Styles Book - Generative AI
   Separation into multiple phases and prompts would complicate the sync feature.
 
 - Agent stores its observations and learnings in `ELN.md`, an append-only [Electronic_lab_notebook](https://en.wikipedia.org/wiki/Electronic_lab_notebook) file.
-  This file is intended for human use only and should never be used by the agent to make decisions.
+  In the original approach such file (called e.g., `implementation plan` or `progress` file) is used by default as a local context for the agent.
+  Geoffrey Huntley suggests that sometimes it's advantageous to delete it when the agent gets too confused.
+  In this implementation, it is possible (using `--no-local-context`) to make the file for human use only, so the agent should never use it to make decisions.
+  The reason to avoid relying on `ELN.md` (or any append-only context file) is that it may contain stale information.
+  Moreover, having both the context file and the status file with the task implementation may lead to the need of maintaining and synchronizing this information, and hence more chances for the agent to behave inconsistently.
 
 For a detailed discussions about the Ralph loop approach see the video [ai that works: Ralph Wiggum under the hood: Coding Agent Power Tools](https://github.com/ai-that-works/ai-that-works/tree/main/2025-10-28-ralph-wiggum-coding-agent-power-tools).
 
