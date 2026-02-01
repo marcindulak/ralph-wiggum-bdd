@@ -18,21 +18,21 @@
   "model": "haiku",
   "permissions": {
     "allow": [
-      "Bash(docker:*)",
-      "Bash(npm:*)",
-      "Bash(cat:*)",
-      "Bash(find:*)",
-      "Bash(grep:*)",
-      "Bash(ls:*)",
-      "Bash(sort:*)",
-      "Bash(wc:*)"
+      "Bash(docker *)",
+      "Bash(cat *)",
+      "Bash(find *)",
+      "Bash(grep *)",
+      "Bash(ls *)",
+      "Bash(npm *)",
+      "Bash(sort *)",
+      "Bash(wc *)"
     ],
     "ask": [],
     "defaultMode": "default",
     "deny": [
-      "Bash(git config:*)",
-      "Bash(git push:*)",
-      "Bash(sudo:*)",
+      "Bash(git config *)",
+      "Bash(git push *)",
+      "Bash(sudo *)",
       "Edit(./.claude/settings.json)",
       "Edit(**/.gitconfig)",
       "Read(./.azure/**)",
