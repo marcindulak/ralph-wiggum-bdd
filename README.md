@@ -1,14 +1,16 @@
+[![Mentioned in Awesome Claude Code](https://awesome.re/mentioned-badge.svg)](https://github.com/hesreallyhim/awesome-claude-code)
+
+> Co-Authored-By: Claude
+
+# Functionality overview
+
 A standalone Bash script that runs the Claude Code agent in a loop to implement software requirements using Behavior-Driven Development (BDD).
 Inspired by the [Ralph Wiggum](https://ghuntley.com/ralph/) approach.
 
 In principle, while running unattended, the script can keep code and requirements in sync.
 In practice, it requires interactive human supervision.
 
-> Co-Authored-By: Claude
-
-# Functionality overview
-
-See [PROMPT in scripts/ralph-wiggum-bdd.sh](scripts/ralph-wiggum-bdd.sh) for the functionality details.
+See [scripts/ralph-wiggum-bdd.sh](scripts/ralph-wiggum-bdd.sh) for the functionality details (yes, read the script).
 
 The script may improve generated code quality compared to a standalone agent because:
 
