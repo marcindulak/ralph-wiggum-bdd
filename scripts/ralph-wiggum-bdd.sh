@@ -166,7 +166,9 @@ Do not mark @status-done unless the tests verify all scenarios pass.
    DATE: YYYY-MM-DD HH:MM:SS
    TITLE: Implement Feature NNN: Brief Title
    COMMIT: <commit-sha>
-   OBSERVATIONS: free-text observations and learnings, could include bullet points or tables. Include important insights, issues encountered, solutions applied, decisions made. Keep to 5-10 sentences maximum.
+   DECISIONS: [Chosen approach and why]
+   ALTERNATIVES: [Alternatives considered and rejected with reasons. If none, explain why.]
+   OBSERVATIONS: [Other insights, issues, solutions. 3-5 sentences.]
    # End of ENTRY AAA
    ```
 
@@ -176,7 +178,9 @@ Do not mark @status-done unless the tests verify all scenarios pass.
    DATE: 2024-01-19 14:23:45
    TITLE: Implement Feature 001: Temperature Conversion
    COMMIT: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t
-   OBSERVATIONS: Successfully implemented bidirectional temperature conversion. Step definitions were straightforward. Main challenge was handling edge cases for absolute zero (-273.15°C). Used type hints consistently throughout. All tests pass with no warnings.
+   DECISIONS: Used simple arithmetic formulas for conversion - fast, maintainable, no dependencies.
+   ALTERNATIVES: Considered lookup tables (rejected: inflexible). Considered polynomial approximation (rejected: unnecessary complexity).
+   OBSERVATIONS: Edge case handling for absolute zero required careful bounds checking. All tests pass.
    # End of ENTRY 001
    ```
 
@@ -204,6 +208,7 @@ The script will start a new iteration when the user returns.
 - One feature per iteration. STOP after completing or when blocked. Do NOT continue to next feature.
 - All scenarios and tests must pass before any commit. This is non-negotiable. Run the test suite and verify.
 - After ANY commit (even one requested explicitly by the user), you MUST append an entry to ELN.md. No exceptions.
+- ELN.md entries must include ALTERNATIVES section: document rejected alternatives if any were considered, or explain why the decision was constrained.
 - Never modify REQUIREMENTS.md without human approval.
 - Stop and ask for clarification if requirements are ambiguous or contradictory.
 - After committing a feature, STOP and tell user to type /exit for fresh context.
