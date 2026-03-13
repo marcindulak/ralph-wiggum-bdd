@@ -64,7 +64,7 @@ If issues found, stop and ask human to clarify or update features and/or REQUIRE
    Caveats:
    None
 
-6. After committing, append an entry to ELN.md with observations and learnings. Include also negative learnings, like details of failed experiments. Use the same format as Stage 2 (see Complete section).
+6. After committing, append an entry to ELN.md with observations and learnings. Include also negative learnings, like details of failed experiments. Add the new entry AT THE END OF THE FILE. Use the same format as Stage 2 (see Complete section).
 
 7. MANDATORY STOP: Exit immediately after creating feature files. Do NOT proceed to Stage 2. Do NOT implement any code. The next iteration will handle implementation.
 
@@ -159,36 +159,72 @@ Do not mark @status-done unless the tests verify all scenarios pass.
    ```
 
 3. MANDATORY: After committing, you MUST append an entry to ELN.md (Electronic Lab Notebook) with observations and learnings.
-   Do not skip this step. The entry must follow this format EXACTLY:
+   Do not skip this step. Add the new entry AT THE END OF THE FILE (after all existing entries).
+   The entry must follow this format EXACTLY:
 
    ```
-   # Start of ENTRY AAA
-   DATE: YYYY-MM-DD HH:MM:SS
-   TITLE: Implement Feature NNN: Brief Title
-   COMMIT: <commit-sha>
-   DECISIONS: [Chosen approach and why]
-   ALTERNATIVES: [Alternatives considered and rejected with reasons. If none, explain why.]
-   OBSERVATIONS: [Other insights, issues, solutions. 3-5 sentences.]
-   # End of ENTRY AAA
+   ## Start of ENTRY AAA
+
+   **DATE:** YYYY-MM-DD HH:MM:SS
+   **TITLE:** Implement Feature NNN: Brief Title
+   **COMMIT:** <commit-sha>
+
+   ### DECISIONS
+
+   [Chosen approach and why. Document ALL design decisions:
+   code, infrastructure, tooling (e.g., test framework, package manager),
+   configuration (e.g., database engine), and deployment. Each decision on its own line.
+   CRITICAL: For any decision that relates to or builds on existing ELN entries, you MUST explicitly reference the ENTRY number.
+   Example: "Following ENTRY 001 decision to use Python, chose Framework X because..."
+   or "Reconsidered ENTRY 003 decision about Y, now using Z instead because..."]
+
+   ### ALTERNATIVES
+
+   [Each alternative on its own line with the reason for rejection.
+   If none were considered, explain why the decision was constrained.]
+
+   ### OBSERVATIONS
+
+   [Things noticed that cannot yet be classified as a decision or alternative.
+   Unexpected behaviors, anomalies, or open questions that may become relevant
+   in future iterations. Do NOT put status statements like "all tests pass" here.
+   Do NOT repeat descriptions of DECISIONS or ALTERNATIVES here.
+   If there is nothing to record, write "None".]
+
+   ## End of ENTRY AAA
    ```
 
    Example:
    ```
-   # Start of ENTRY 001
-   DATE: 2024-01-19 14:23:45
-   TITLE: Implement Feature 001: Temperature Conversion
-   COMMIT: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t
-   DECISIONS: Used simple arithmetic formulas for conversion - fast, maintainable, no dependencies.
-   ALTERNATIVES: Considered lookup tables (rejected: inflexible). Considered polynomial approximation (rejected: unnecessary complexity).
-   OBSERVATIONS: Edge case handling for absolute zero required careful bounds checking. All tests pass.
-   # End of ENTRY 001
+   ## Start of ENTRY 002
+
+   **DATE:** 2024-01-19 14:23:45
+   **TITLE:** Implement Feature 001: Temperature Conversion
+   **COMMIT:** a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t
+
+   ### DECISIONS
+
+   - Used simple arithmetic formulas for conversion — fast, maintainable, no dependencies.
+   - Used Python 3.12 slim container image — smaller than full image, sufficient for this project.
+
+   ### ALTERNATIVES
+
+   - Considered lookup tables (rejected: inflexible for arbitrary input values).
+   - Considered polynomial approximation (rejected: unnecessary complexity for exact formulas).
+   - Considered Alpine-based container (rejected: musl libc compatibility issues with some Python packages).
+
+   ### OBSERVATIONS
+
+   - The conversion formula loses precision for values near float64 limits — may need investigation if high-precision use cases arise.
+
+   ## End of ENTRY 002
    ```
 
    If ELN.md does not exist, create it with a header explaining it is an append-only log.
    IMPORTANT: ELN.md is NOT committed - it remains a local non-committed file.
 
 4. STOP HERE. Do NOT proceed to the next feature.
-   Tell the user: "Feature NNN is complete and committed. Type /exit to end this iteration and start the next feature with fresh context, or tell me to continue if you want to proceed in this session."
+   Tell the user: "Feature NNN is complete and committed. Type /exit to end this iteration and start the next feature with fresh context, or tell me to continue if you want to proceed in this session." (replace NNN with the actual just completed feature number, e.g., 001)
    Wait for user to exit, or explicit user decision to continue.
 
 ## MANDATORY: End of Iteration
@@ -208,6 +244,7 @@ The script will start a new iteration when the user returns.
 - One feature per iteration. STOP after completing or when blocked. Do NOT continue to next feature.
 - All scenarios and tests must pass before any commit. This is non-negotiable. Run the test suite and verify.
 - After ANY commit (even one requested explicitly by the user), you MUST append an entry to ELN.md. No exceptions.
+- ELN.md entries must document ALL design decisions, not only code-level choices: include infrastructure, tooling, configuration, and deployment decisions.
 - ELN.md entries must include ALTERNATIVES section: document rejected alternatives if any were considered, or explain why the decision was constrained.
 - Never modify REQUIREMENTS.md without human approval.
 - Stop and ask for clarification if requirements are ambiguous or contradictory.
