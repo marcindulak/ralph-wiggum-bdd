@@ -283,7 +283,6 @@ fi
 if [[ "${INTERACTIVE_MODE}" == "true" ]]; then
     MAX_ITERATIONS=1
     PROMPT_FILE="/tmp/ralph-wiggum-bdd-prompt-$$.txt"
-    trap '/bin/rm -f "${PROMPT_FILE}"' EXIT INT TERM
 fi
 
 if [[ "${LOCAL_CONTEXT}" == "false" ]]; then
@@ -296,6 +295,37 @@ round10() {
     echo $(( (n + 5) / 10 * 10 ))
 }
 
+print_iteration_time() {
+    local iteration_start=$1
+    local i=$2
+    if [[ -n "${iteration_start}" ]]; then
+        local elapsed=$((SECONDS - iteration_start))
+        echo "" >&2
+        echo "--- End of iteration ${i} --- (${elapsed}s)" >&2
+    fi
+}
+
+on_signal() {
+    local signal=$1
+    local iteration_start=$2
+    local i=$3
+    local prompt_file=$4
+
+    print_iteration_time "$iteration_start" "$i"
+    [[ -n "${prompt_file}" ]] && /bin/rm -f "${prompt_file}"
+
+    local signal_num
+    case "$signal" in
+        INT) signal_num=2 ;;
+        TERM) signal_num=15 ;;
+    esac
+    exit $((128 + signal_num))
+}
+
+trap '[[ -n "${PROMPT_FILE:-}" ]] && /bin/rm -f "${PROMPT_FILE}"' EXIT
+trap 'on_signal INT "${iteration_start:-}" "$i" "${PROMPT_FILE:-}"' INT
+trap 'on_signal TERM "${iteration_start:-}" "$i" "${PROMPT_FILE:-}"' TERM
+
 echo "ralph-wiggum-bdd: Starting with max ${MAX_ITERATIONS} iterations"
 echo "----------------------------------------"
 
@@ -303,6 +333,8 @@ for ((i = 1; i <= MAX_ITERATIONS; i++)); do
     echo ""
     echo "Iteration ${i}/${MAX_ITERATIONS}"
     echo "----------------------------------------"
+
+    iteration_start=$SECONDS
 
     echo "DEBUG: About to invoke claude..." >&2
     echo -n "DEBUG: Approximate PROMPT length: $(round10 ${#PROMPT}) characters" >&2
@@ -320,6 +352,5 @@ for ((i = 1; i <= MAX_ITERATIONS; i++)); do
         echo "${PROMPT}" | claude --print --dangerously-skip-permissions || true
     fi
 
-    echo ""
-    echo "--- End of iteration ${i} ---"
+    print_iteration_time "$iteration_start" "$i"
 done
