@@ -139,7 +139,7 @@ Do not mark @status-done unless the tests verify all scenarios pass.
 
 2. Commit all related file changes together (REQUIREMENTS.md, feature, steps, src, ...) using EXACTLY this format:
 
-   Implement Feature NNN: Brief Title
+   Implement FR-NNN: Brief Title
 
    Why:
    [1-2 sentences explaining what this feature does, not that tests pass]
@@ -149,7 +149,7 @@ Do not mark @status-done unless the tests verify all scenarios pass.
 
    Example:
    ```
-   Implement Feature 001: Temperature Conversion
+   Implement FR-001: Temperature Conversion
 
    Why:
    Provides bidirectional temperature conversion between Celsius and Fahrenheit.
@@ -166,7 +166,7 @@ Do not mark @status-done unless the tests verify all scenarios pass.
    ## Start of ENTRY AAA
 
    **DATE:** YYYY-MM-DD HH:MM:SS
-   **TITLE:** Implement Feature NNN: Brief Title
+   **TITLE:** Implement FR-NNN: Brief Title
    **COMMIT:** <commit-sha>
 
    ### DECISIONS
@@ -199,7 +199,7 @@ Do not mark @status-done unless the tests verify all scenarios pass.
    ## Start of ENTRY 002
 
    **DATE:** 2024-01-19 14:23:45
-   **TITLE:** Implement Feature 001: Temperature Conversion
+   **TITLE:** Implement FR-001: Temperature Conversion
    **COMMIT:** a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t
 
    ### DECISIONS
@@ -224,7 +224,7 @@ Do not mark @status-done unless the tests verify all scenarios pass.
    IMPORTANT: ELN.md is NOT committed - it remains a local non-committed file.
 
 4. STOP HERE. Do NOT proceed to the next feature.
-   Tell the user: "Feature NNN is complete and committed. Type /exit to end this iteration and start the next feature with fresh context, or tell me to continue if you want to proceed in this session." (replace NNN with the actual just completed feature number, e.g., 001)
+   Tell the user: "FR-NNN/NFR-NNN is complete and committed. Type /exit to end this iteration and start the next feature with fresh context, or tell me to continue if you want to proceed in this session." (replace NNN with the actual just completed feature number, e.g., 001)
    Wait for user to exit, or explicit user decision to continue.
 
 ## MANDATORY: End of Iteration
