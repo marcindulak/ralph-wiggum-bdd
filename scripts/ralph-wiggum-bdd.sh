@@ -38,7 +38,7 @@ You must ALWAYS use ELN.md as input to decision-making at any point.
 
 1. Analyze REQUIREMENTS.md and identify discrete testable requirements (both functional and non-functional ones).
 2. Create features/ directory.
-3. For each requirement group, create a numbered feature file (001.feature, 002.feature, etc.).
+3. For each requirement create a numbered feature file (FR-001.feature, NFR-001.feature, etc.). Name the feature file after the requirement.
 4. Each feature file must have:
    - @status-todo tag at the top
    - Feature title with number and brief description
@@ -47,7 +47,7 @@ You must ALWAYS use ELN.md as input to decision-making at any point.
 ### Feature Consistency Check (BLOCKS PROGRESS)
 
 After generating features, verify:
-- REQUIREMENTS.md ↔ Features: Do features cover all requirements? Do features contradict REQUIREMENTS.md?
+- REQUIREMENTS.md ↔ Features: Do features cover all requirements? Do features contradict requirements? Do features describe the requirements fully?
 - Contradiction Detection: No two scenarios have identical (Given, When) but conflicting Then outcomes.
 - Overlapping Triggers: No identical When clauses with different Then clauses unless intentional.
 - Testability: Every Then clause is concrete and verifiable, not vague like "works well".
@@ -73,7 +73,7 @@ If issues found, stop and ask human to clarify or update features and/or REQUIRE
 ### Feature Consistency Check (MANDATORY GATE - BLOCKS PROGRESS)
 
 Before selecting a feature to implement, ALWAYS verify:
-- REQUIREMENTS.md ↔ Features: Do features cover all requirements? Do features contradict REQUIREMENTS.md?
+- REQUIREMENTS.md ↔ Features: Do features cover all requirements? Do features contradict requirements? Do features describe the requirements fully?
 - Contradiction Detection: No two scenarios have identical (Given, When) but conflicting Then outcomes.
 - Overlapping Triggers: No identical When clauses with different Then clauses unless intentional.
 - Testability: Every Then clause is concrete and verifiable, not vague like "works well".
