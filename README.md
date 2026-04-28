@@ -1,5 +1,3 @@
-[![Mentioned in Awesome Claude Code](https://awesome.re/mentioned-badge.svg)](https://github.com/hesreallyhim/awesome-claude-code)
-
 > Co-Authored-By: Claude
 
 # Functionality overview
