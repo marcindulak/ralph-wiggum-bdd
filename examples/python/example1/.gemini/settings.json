@@ -1,0 +1,35 @@
+{
+  "context": {
+    "includeDirectories": ["/tmp/ralph-wiggum-bdd"]
+  },
+  "general": {
+    "defaultApprovalMode": "default",
+    "enableAutoUpdate": false
+  },
+  "telemetry": {
+    "enabled": false
+  },
+  "ui": {
+    "hideBanner": true,
+    "hideTips": true,
+    "showSpinner": false,
+    "errorVerbosity": "full"
+  },
+  "privacy": {
+    "usageStatisticsEnabled": false
+  },
+  "model": {
+    "name": "gemini-3-flash-preview"
+  },
+  "tools": {
+    "shell": {
+      "enableInteractiveShell": true
+    },
+  "exclude": [
+     "run_shell_command(docker)",
+     "run_shell_command(git push)"]
+  },
+  "security": {
+    "toolSandboxing": true
+  }
+}

@@ -1,0 +1,11 @@
+model = "gpt-5.4-mini"
+
+approval_policy = "untrusted"
+sandbox_mode = "danger-full-access"
+
+[analytics]
+enabled = false
+
+[memories]
+generate_memories = false
+use_memories = false
