@@ -1,0 +1,10 @@
+prefix_rule(
+    pattern = ["git", "config"],
+    decision = "forbidden",
+)
+prefix_rule(
+    pattern = ["docker"],
+    decision = "forbidden",
+)
+
+

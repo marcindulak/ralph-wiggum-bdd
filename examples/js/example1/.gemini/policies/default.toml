@@ -1,0 +1,6 @@
+# policies are not supported at the project level https://github.com/google-gemini/gemini-cli/issues/18186
+[[rule]]
+toolName = "run_shell_command"
+commandRegex = ".*git config.*"
+decision = "deny"
+priority = 100

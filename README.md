@@ -2,7 +2,7 @@
 
 # Functionality overview
 
-A standalone Bash script that runs the Claude Code agent in a loop to implement software requirements using Behavior-Driven Development (BDD).
+A standalone Bash script that runs a coding agent in a loop to implement software requirements using Behavior-Driven Development (BDD).
 Inspired by the [Ralph Wiggum](https://ghuntley.com/ralph/) approach.
 
 In principle, while running unattended, the script can keep code and requirements in sync.
@@ -26,7 +26,7 @@ It may fail to generate the desired code because, among others:
 ## Prerequisites
 
 - Linux or macOS (Windows users need WSL)
-- Claude Code CLI installed and configured (`claude` command available)
+- Claude Code/Codex/Gemini CLI installed and configured (`claude`, `codex`, `gemini` command available)
 - Git installed and configured
 - A Gherkin test framework installed (Behave for Python, Cucumber for Ruby/JS/TS, etc.)
 
@@ -68,8 +68,8 @@ ralph-wiggum-bdd.sh --interactive
 ```
 
 In the interactive mode, the prompt will be saved to a temp file.
-In Claude, reference it with `@/tmp/ralph-wiggum-bdd-prompt-PID.txt` or provide your own instructions.
-The human controls when to stop by exiting the Claude session.
+In the agent, reference it with `@/tmp/ralph-wiggum-bdd/prompt-${AGENT}-PID.txt` or provide your own instructions.
+The human controls when to stop by exiting the agent session.
 
 For a usage on a larger code base, see [Learning API Styles Book - Generative AI Experiments](https://github.com/marcindulak/learning-api-styles-gen-ai-experiments).
 

@@ -259,15 +259,17 @@ usage() {
     echo ""
     echo "Options:"
     echo "  --help             Show this help message"
-    echo "  --interactive      Use interactive Claude mode (human controls when to stop)"
+    echo "  --agent            The agent to use: claude, codex, gemini (default: claude)"
+    echo "  --interactive      Use interactive agent mode (human controls when to stop)"
     echo "  --iterations N     Maximum number of agent iterations (non-interactive mode)"
     echo "  --no-local-context Do not use the local electronic notebook file (ELN.md) in the agent context"
     echo "  --prompt           Custom prompt string, e.g., \"You're absolutely right!\", or \"\$(cat prompt.md)\""
     exit 1
 }
 
-MAX_ITERATIONS=""
+AGENT="claude"
 INTERACTIVE_MODE=false
+MAX_ITERATIONS=""
 LOCAL_CONTEXT=true
 
 while [[ $# -gt 0 ]]; do
@@ -278,6 +280,14 @@ while [[ $# -gt 0 ]]; do
         --interactive)
             INTERACTIVE_MODE=true
             shift
+            ;;
+        --agent)
+            if [[ -z "$2" ]] || ! [[ "$2" =~ ^(claude|codex|gemini)$ ]]; then
+                echo "Error: --agent supports only: claude, codex, gemini"
+                exit 1
+            fi
+            AGENT="$2"
+            shift 2
             ;;
         --iterations)
             if [[ -z "$2" ]] || ! [[ "$2" =~ ^[0-9]+$ ]]; then
@@ -319,13 +329,63 @@ fi
 
 if [[ "${INTERACTIVE_MODE}" == "true" ]]; then
     MAX_ITERATIONS=1
-    PROMPT_FILE="/tmp/ralph-wiggum-bdd-prompt-$$.txt"
+    PROMPT_DIR="/tmp/ralph-wiggum-bdd"
+    PROMPT_FILE="$PROMPT_DIR/prompt-$AGENT-$$.md"
 fi
 
 if [[ "${LOCAL_CONTEXT}" == "false" ]]; then
     PROMPT="${PROMPT//ALWAYS READ ELN.md AT THE START/NEVER READ ELN.md AT THE START}"
     PROMPT="${PROMPT//You must ALWAYS use ELN.md as input to decision-making/You must NEVER use ELN.md as input to decision-making}"
 fi
+
+case "${AGENT}" in
+    claude)
+        ;;
+    codex)
+        PROMPT="${PROMPT//CLAUDE.md/AGENTS.md}"
+        ;;
+    gemini)
+        PROMPT="${PROMPT//CLAUDE.md/GEMINI.md}"
+        ;;
+    *)
+        echo "Error: --agent supports only: claude, codex, gemini" >&2
+        exit 1
+        ;;
+esac
+
+agent_interactive_claude() {
+    claude
+}
+
+agent_non_interactive_claude() {
+    echo "$PROMPT" | claude --dangerously-skip-permissions --print || true
+}
+
+agent_interactive_codex() {
+    codex
+}
+
+agent_non_interactive_codex() {
+    codex exec --dangerously-bypass-approvals-and-sandbox "$PROMPT" || true
+}
+
+agent_interactive_gemini() {
+    gemini
+}
+
+agent_non_interactive_gemini() {
+    gemini --prompt "$PROMPT" --skip-trust --yolo || true
+}
+
+type "agent_interactive_${AGENT}" >/dev/null 2>&1 || {
+    echo "Error: unsupported interactive agent '$AGENT'" >&2
+    exit 1
+}
+
+type "agent_non_interactive_${AGENT}" >/dev/null 2>&1 || {
+    echo "Error: unsupported non-interactive agent '$AGENT'" >&2
+    exit 1
+}
 
 round10() {
     local n=$1
@@ -373,20 +433,23 @@ for ((i = 1; i <= MAX_ITERATIONS; i++)); do
 
     iteration_start=$SECONDS
 
-    echo "DEBUG: About to invoke claude..." >&2
+    echo "DEBUG: About to invoke $AGENT..." >&2
     echo -n "DEBUG: Approximate PROMPT length: $(round10 ${#PROMPT}) characters" >&2
     echo -n ", $(round10 $(set -- $PROMPT && echo $#)) words" >&2
     echo ", $(round10 $(( ($(set -- $PROMPT && echo $#)*3)/2 ))) tokens" >&2
     echo "DEBUG: Interactive mode: ${INTERACTIVE_MODE}" >&2
 
     if [[ "${INTERACTIVE_MODE}" == "true" ]]; then
+	mkdir -pv "$PROMPT_DIR"
         printf '%s' "${PROMPT}" > "${PROMPT_FILE}"
         echo "" >&2
-        echo "To start execution, copy-paste @${PROMPT_FILE} in Claude" >&2
+        echo "To start execution, copy-paste the following line into the agent:" >&2
         echo "" >&2
-        claude
+        echo "@${PROMPT_FILE}" >&2
+        echo "" >&2
+        "agent_interactive_$AGENT"
     else
-        echo "${PROMPT}" | claude --print --dangerously-skip-permissions || true
+        "agent_non_interactive_$AGENT"
     fi
 
     print_iteration_time "$iteration_start" "$i"
