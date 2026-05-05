@@ -41,7 +41,6 @@
       "Read(~/.aws/**)",
       "Read(~/.azure/**)",
       "Read(~/.config/gcloud/**)",
-      "Read(~/.gitconfig)",
       "Read(~/.ssh/**)",
       "Read(~/.terraform.d/**)",
       "Write(./.claude/settings.json)",

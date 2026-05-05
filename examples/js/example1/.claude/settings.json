@@ -23,13 +23,13 @@
       "Bash(find *)",
       "Bash(grep *)",
       "Bash(ls *)",
-      "Bash(npm *)",
       "Bash(sort *)",
       "Bash(wc *)"
     ],
     "ask": [],
     "defaultMode": "default",
     "deny": [
+      "Bash(npm *)",
       "Bash(git config *)",
       "Bash(git push *)",
       "Bash(sudo *)",
@@ -41,7 +41,6 @@
       "Read(~/.aws/**)",
       "Read(~/.azure/**)",
       "Read(~/.config/gcloud/**)",
-      "Read(~/.gitconfig)",
       "Read(~/.ssh/**)",
       "Read(~/.terraform.d/**)",
       "Write(./.claude/settings.json)",
@@ -53,6 +52,7 @@
     "autoAllowBashIfSandboxed": true,
     "enabled": true,
     "network": {
+      "allowAllUnixSockets": true,
       "allowLocalBinding": true
     }
   }
