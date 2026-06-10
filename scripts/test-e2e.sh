@@ -32,7 +32,7 @@ run_example() {
 
     local tmpdir
     tmpdir=$(mktemp -d "/tmp/ralph-wiggum-bdd.XXXXXX")
-    trap "rm -rf '${tmpdir}'" EXIT
+    trap 'rm -rf ${tmpdir}' EXIT
 
     cp -r "${example_path}/." "${tmpdir}/"
     cd "${tmpdir}"
