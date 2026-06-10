@@ -43,16 +43,17 @@ You must ALWAYS use ELN.md as input to decision-making at any point.
    - @status-todo tag at the top
    - Feature title with number and brief description
    - Scenarios with concrete Given/When/Then steps (no vague language)
+5. After a feature file is generated, review it to make sure it corresponds to the relevant requirement.
 
 ### Feature Consistency Check (BLOCKS PROGRESS)
 
-After generating features, verify:
+After generating features, read them afresh to verify:
 - REQUIREMENTS.md ↔ Features: Do features cover all requirements? Do features contradict requirements? Do features describe the requirements fully?
 - Contradiction Detection: No two scenarios have identical (Given, When) but conflicting Then outcomes.
 - Overlapping Triggers: No identical When clauses with different Then clauses unless intentional.
 - Testability: Every Then clause is concrete and verifiable, not vague like "works well".
 
-If issues found, stop and ask human to clarify or update features and/or REQUIREMENTS.md.
+If issues found in features found, stop and ask human to clarify or update features and/or REQUIREMENTS.md.
 
 5. Commit the feature files using this format:
 
@@ -103,8 +104,8 @@ Before finding the next feature, check git status:
 1. Modify ONLY the @status-active feature.
 2. Create step definitions in features/steps/ for undefined steps in this feature.
 3. Reuse existing step definitions when the step text matches.
-4. Implement code in src/ to make the scenarios of the @status-active feature pass.
-   MANDATORY: ALL implementation code must be placed in src/ directory. Never place code in the project root or other directories.
+4. Implement code in src/ (preferred location) to make the scenarios of the @status-active feature pass.
+   MANDATORY: ALL implementation code must be placed in src/ directory (preferred location, unless the code exists in another directory due to programming language constraints). Never place code in the project root or other directories.
 5. MANDATORY: Run ALL tests using the test framework. Do not skip this step.
    - Verify that ALL scenarios across ALL features pass.
    - If other features fail after your changes, debug and fix to make all tests pass.
