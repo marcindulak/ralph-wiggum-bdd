@@ -242,6 +242,7 @@ The script will start a new iteration when the user returns.
 
 ## Rules
 
+- If you reach a question, such as whether to include a code example, do not stop the iteration there. Make a decision, explain the rationale, and continue the iteration. This does not apply to the STOP after creating feature files, or the STOP after committing a feature. Always stop for those.
 - One feature per iteration. STOP after completing or when blocked. Do NOT continue to next feature.
 - All scenarios and tests must pass before any commit. This is non-negotiable. Run the test suite and verify.
 - After ANY commit (even one requested explicitly by the user), you MUST append an entry to ELN.md. No exceptions.
@@ -259,12 +260,13 @@ usage() {
     echo "Usage: $0 <options>"
     echo ""
     echo "Options:"
-    echo "  --help             Show this help message"
     echo "  --agent            The agent to use: claude, codex, gemini (default: claude)"
+    echo "  --help             Show this help message"
     echo "  --interactive      Use interactive agent mode (human controls when to stop)"
     echo "  --iterations N     Maximum number of agent iterations (non-interactive mode)"
     echo "  --no-local-context Do not use the local electronic notebook file (ELN.md) in the agent context"
     echo "  --prompt           Custom prompt string, e.g., \"You're absolutely right!\", or \"\$(cat prompt.md)\""
+    echo "  --verbose          Stream MESSAGE/TOOL output in non-interactive mode (claude only)"
     exit 1
 }
 
@@ -272,16 +274,10 @@ AGENT="claude"
 INTERACTIVE_MODE=false
 MAX_ITERATIONS=""
 LOCAL_CONTEXT=true
+VERBOSE=false
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --help)
-            usage
-            ;;
-        --interactive)
-            INTERACTIVE_MODE=true
-            shift
-            ;;
         --agent)
             if [[ -z "$2" ]] || ! [[ "$2" =~ ^(claude|codex|gemini)$ ]]; then
                 echo "Error: --agent supports only: claude, codex, gemini"
@@ -289,6 +285,13 @@ while [[ $# -gt 0 ]]; do
             fi
             AGENT="$2"
             shift 2
+            ;;
+        --help)
+            usage
+            ;;
+        --interactive)
+            INTERACTIVE_MODE=true
+            shift
             ;;
         --iterations)
             if [[ -z "$2" ]] || ! [[ "$2" =~ ^[0-9]+$ ]]; then
@@ -309,7 +312,11 @@ while [[ $# -gt 0 ]]; do
             fi
             PROMPT="$2"
             shift 2
-            ;;        
+            ;;
+        --verbose)
+            VERBOSE=true
+            shift
+            ;;
         *)
             echo "Error: Unknown option: $1"
             usage
@@ -339,6 +346,10 @@ if [[ "${LOCAL_CONTEXT}" == "false" ]]; then
     PROMPT="${PROMPT//You must ALWAYS use ELN.md as input to decision-making/You must NEVER use ELN.md as input to decision-making}"
 fi
 
+if [[ "${INTERACTIVE_MODE}" == "true" ]]; then
+    PROMPT="$(printf '%s\n' "$PROMPT" | grep -v '^- If you reach a question,')"
+fi
+
 case "${AGENT}" in
     claude)
         ;;
@@ -359,7 +370,28 @@ agent_interactive_claude() {
 }
 
 agent_non_interactive_claude() {
-    echo "$PROMPT" | claude --dangerously-skip-permissions --print || true
+    if [[ "${VERBOSE}" == "true" ]]; then
+        echo "$PROMPT" | claude --dangerously-skip-permissions --output-format stream-json --verbose --print | \
+            jq -r '
+                select(.type == "assistant") |
+                .message.model as $model |
+                .message.content[] |
+                if .type == "thinking" or .type == "text" then
+                    "\n--- MESSAGE (\(.type)) \($model) ---\n" + (.text // .thinking)
+                elif .type == "tool_use" then
+                    "\n--- TOOL (\(.name)) \($model) ---\n" +
+                    (if (.name | test("^(Write|Edit|MultiEdit|NotebookEdit)$")) then
+                        (.input.file_path // "unknown")
+                    else
+                        (.input | tojson)
+                    end)
+                else
+                    empty
+                end
+            ' || true
+    else
+        echo "$PROMPT" | claude --dangerously-skip-permissions --print || true
+    fi
 }
 
 agent_interactive_codex() {
