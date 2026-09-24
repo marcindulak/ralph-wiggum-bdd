@@ -36,9 +36,9 @@ You must ALWAYS use ELN.md as input to decision-making at any point.
 
 ## Stage 1: Generate Features (if features/ does not exist)
 
-1. Analyze REQUIREMENTS.md and identify discrete testable requirements (both functional and non-functional ones).
+1. Analyze REQUIREMENTS.md and identify discrete testable requirements (both functional and non-functional ones). If a requirement cannot be verified within this project, do not create a feature file for it. Instead, note this directly in its existing table row (e.g. in the note column), stating it is not testable within this project and how it will be verified instead (inspection, demonstration, or another means).
 2. Create features/ directory.
-3. For each requirement create a numbered feature file (FR-001.feature, NFR-001.feature, etc.). Name the feature file after the requirement.
+3. For each testable requirement, create a numbered feature file using the row number from REQUIREMENTS.md (FR-001.feature for the 1st FR row, NFR-002.feature for the 2nd NFR row if testable, etc.). Non-testable requirements have no feature file but their row number is preserved in the table, maintaining traceability between REQUIREMENTS.md rows and feature files.
 4. Each feature file must have:
    - @status-todo tag at the top
    - Feature title with number and brief description
@@ -48,7 +48,7 @@ You must ALWAYS use ELN.md as input to decision-making at any point.
 ### Feature Consistency Check (BLOCKS PROGRESS)
 
 After generating features, read them afresh to verify:
-- REQUIREMENTS.md ↔ Features: Do features cover all requirements? Do features contradict requirements? Do features describe the requirements fully?
+- REQUIREMENTS.md ↔ Features: Is every requirement either covered by a feature, or, if not testable within this project, noted as such in its own table row? Do features contradict requirements? Do features describe the requirements fully?
 - Contradiction Detection: No two scenarios have identical (Given, When) but conflicting Then outcomes.
 - Overlapping Triggers: No identical When clauses with different Then clauses unless intentional.
 - Testability: Every Then clause is concrete and verifiable, not vague like "works well".
@@ -74,7 +74,7 @@ If issues found in features found, stop and ask human to clarify or update featu
 ### Feature Consistency Check (MANDATORY GATE - BLOCKS PROGRESS)
 
 Before selecting a feature to implement, ALWAYS verify:
-- REQUIREMENTS.md ↔ Features: Do features cover all requirements? Do features contradict requirements? Do features describe the requirements fully?
+- REQUIREMENTS.md ↔ Features: Is every requirement either covered by a feature, or, if not testable within this project, noted as such in its own table row? Do features contradict requirements? Do features describe the requirements fully?
 - Contradiction Detection: No two scenarios have identical (Given, When) but conflicting Then outcomes.
 - Overlapping Triggers: No identical When clauses with different Then clauses unless intentional.
 - Testability: Every Then clause is concrete and verifiable, not vague like "works well".
@@ -114,7 +114,7 @@ Before finding the next feature, check git status:
 ### Sync Verification
 
 Before committing, run tests and verify bidirectional consistency:
-- REQUIREMENTS.md ↔ Features: Do features cover all requirements? Do features contradict requirements?
+- REQUIREMENTS.md ↔ Features: Is every requirement either covered by a feature, or noted as not testable in its own table row? Do features contradict requirements?
 - Features ↔ Steps: Do step definitions correctly implement the Gherkin steps?
 - Steps ↔ Code: Does the implementation match what steps expect?
 - Code ↔ All Features: Run ALL scenarios to verify they pass. All tests must pass before proceeding.
