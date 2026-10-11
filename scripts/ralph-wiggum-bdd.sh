@@ -92,9 +92,9 @@ Before finding the next feature, check git status:
 
 1. If a feature has @status-active, resume that feature ONLY.
 2. If multiple @status-active exist, pick the one with uncommitted changes or lowest number, set others to @status-todo.
-3. If no @status-active, analyze @status-todo features and select the SINGLE highest-priority feature based on:
-   - Dependencies (implement prerequisites first)
-   - Complexity (simpler features first when no dependencies)
+3. If no @status-active, analyze @status-todo features and the not yet implemented requirements that have no feature file. Before selecting, explain the reasons for choosing the given requirement as the next one to implement. Skip any requirement whose prerequisites are not yet implemented. Among the rest, select the SINGLE highest-priority requirement based on:
+   - End-to-end usability (the MOST IMPORTANT criterion: prefer requirements the end user needs to reach the main goals of the project over secondary ones like styling, optimization, or refinements of something that already works). A prerequisite counts as having the usability of the requirements it unblocks.
+   - Complexity (simpler requirements first, only as a tie-breaker when usability is comparable)
    - Numerical order (as fallback)
 4. Change selected feature tag to @status-active.
 5. CRITICAL: Work on ONLY THIS ONE FEATURE for this entire iteration. Do not implement other features.
@@ -146,7 +146,7 @@ Do not mark @status-done unless the tests verify all scenarios pass.
    [1-2 sentences explaining what this feature does, not that tests pass]
 
    Caveats:
-   [Breaking changes, migration paths, or impacts. If none, write "None"]
+   [Only what must be done or coordinated because of this commit (e.g. a data migration, a change in another component), or a breaking change. Otherwise write "None"]
 
    Example:
    ```
