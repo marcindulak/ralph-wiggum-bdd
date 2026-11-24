@@ -102,7 +102,7 @@ Before finding the next feature, check git status:
 ### Implement
 
 1. Modify ONLY the @status-active feature.
-2. Create step definitions in features/steps/ for undefined steps in this feature.
+2. Create step definitions for undefined steps in this feature, in the location that the BDD test framework of the project expects.
 3. Reuse existing step definitions when the step text matches.
 4. Implement code in src/ (preferred location) to make the scenarios of the @status-active feature pass.
    MANDATORY: ALL implementation code must be placed in src/ directory (preferred location, unless the code exists in another directory due to programming language constraints). Never place code in the project root or other directories.
